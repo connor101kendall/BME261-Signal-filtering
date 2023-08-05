@@ -1,11 +1,12 @@
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy import signal
-from scipy.fft import fft, fftfreq
-import scipy.io.wavfile as wavfile
+# Import Required Libraries
+import pandas as pd  
+import numpy as np  
+import matplotlib.pyplot as plt  
+from scipy import signal  
+from scipy.fft import fft, fftfreq  
+import scipy.io.wavfile as wavfile  
 
-# Load the .wav 
+# Load the .wav file
 sampling_rate, audio_data = wavfile.read('quote.wav')
 
 # If the sampling rate is > 16KHz, down-sample to 16kHz
@@ -14,8 +15,8 @@ if sampling_rate > target_sampling_rate:
     downsample_factor = sampling_rate // target_sampling_rate
     audio_data = audio_data[::downsample_factor]
     sampling_rate = target_sampling_rate
- 
-# If it is a stereo recording convert to mono
+
+# If it is a stereo recording, convert to mono by taking the left channel
 if len(audio_data.shape) > 1 and audio_data.shape[1] == 2:
     audio_data = audio_data[:, 0]
 
@@ -41,13 +42,13 @@ plt.plot(time, audio_data)
 plt.xlabel('Time (s)')
 plt.ylabel('Amplitude')
 plt.title('Original Audio')
- #plt.show()
+plt.savefig('Original Audio')
 
 # Define parameters for the band-pass filters
 num_filters = 150  # Number of band-pass filters
-center_frequencies = np.linspace(100, 5000, num_filters)  # place equally spaced center frequencies from 100 Hz to 5 kHz
-bandwidth = 50  # Bandwidth 
-filter_order = 4  # Order
+center_frequencies = np.linspace(100, 5000, num_filters)  # Place equally spaced center frequencies from 100 Hz to 5 kHz
+bandwidth = 50  # Bandwidth of each filter
+filter_order = 4  # Order of the band-pass filter
 
 # Create an array to store the RMS values of each band-pass filter's output for each chunk
 rms_values = np.zeros((len(audio_chunks), num_filters))
@@ -80,7 +81,6 @@ plt.xlabel('Chunk Index')
 plt.ylabel('RMS')
 plt.title('RMS Values of Band-Pass Filter Outputs for Each Chunk')
 plt.legend()
-#plt.show()
 
 # Synthesize the sine waves and superimpose them for each chunk
 synthesized_chunks = []
@@ -104,3 +104,12 @@ output_filename = 'robo.wav'
 wavfile.write(output_filename, sampling_rate, synthesized_audio.astype(np.int16))
 
 print("Synthesized audio saved as:", output_filename)
+
+# Plot the output stream
+plt.figure()
+time_output = np.arange(0, len(synthesized_audio)) / sampling_rate
+plt.plot(time_output, synthesized_audio)
+plt.xlabel('Time (s)')
+plt.ylabel('Amplitude')
+plt.title('Synthesized Audio Output')
+plt.savefig('Synthesized Audio Output')

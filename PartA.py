@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from scipy import signal
 from scipy.fft import fft, fftfreq
 
+#extract data from .csv
 raw_data = pd.read_csv('EMG_Datasets.csv')
 data = np.array(raw_data) 
 time = data[:, 0]
@@ -45,6 +46,8 @@ plt.xlim([0, 500])
 plt.ylim([0, 20])
 plt.legend()
 
+plt.savefig('Relaxed Filtered Frequency Spectrum')
+
 plt.figure()
 plt.plot(freq, np.abs(fft_contracted_filtered), label='Contracted (Filtered)')
 plt.xlabel('Frequency (Hz)')
@@ -53,6 +56,7 @@ plt.title('FFT of Filtered Contracted Data')
 plt.xlim([0, 500])
 plt.ylim([0, 20])
 plt.legend()
+plt.savefig('Contracted Filtered Frequency Spectrum')
 # Plot the amplitude spectra of the non-filtered data
 plt.figure()
 plt.plot(freq, np.abs(fft_relaxed), label='Relaxed')
@@ -61,6 +65,7 @@ plt.ylabel('Amplitude')
 plt.title('FFT of Relaxed Data')
 plt.xlim([0, 500])
 plt.legend()
+plt.savefig('Relaxed Frequency Spectrum')
 
 plt.figure()
 plt.plot(freq, np.abs(fft_contracted), label='Contracted')
@@ -69,6 +74,7 @@ plt.ylabel('Amplitude')
 plt.title('FFT of Contracted Data')
 plt.xlim([0, 500])
 plt.legend()
+plt.savefig('Contracted Frequency Spectrum')
 
 # Plot the time domain non-filtered and filtered data
 plt.figure()
@@ -77,6 +83,7 @@ plt.plot(time, relaxed, label='Relaxed (Original)')
 plt.xlabel('Time')
 plt.ylabel('Voltage')
 plt.legend()
+plt.savefig('Contracted Time Domain')
 
 plt.figure()
 plt.plot(time, contracted_filtered, label='Contracted (Filtered)')
@@ -84,6 +91,7 @@ plt.plot(time, relaxed_filtered, label='Relaxed (Filtered)')
 plt.xlabel('Time')
 plt.ylabel('Voltage')
 plt.legend()
+plt.savefig('Contracted Filtered Time Domain')
 
 plt.show()
 
@@ -97,3 +105,5 @@ print(f"Root Mean Square (RMS) for relaxed data: {rms_relaxed}")
 print(f"Root Mean Square (RMS) for contracted data: {rms_contracted}")
 print(f"Root Mean Square (RMS) for filtered relaxed data: {rms_relaxed_filtered}")
 print(f"Root Mean Square (RMS) for filtered contracted data: {rms_contracted_filtered}")
+
+
